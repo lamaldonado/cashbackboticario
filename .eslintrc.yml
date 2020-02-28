@@ -1,0 +1,9 @@
+env:
+  mocha: true
+extends: eslint-config-airbnb-base
+rules:
+  no-underscore-dangle: 0
+  indent:
+    - 2
+    - 2
+    - SwitchCase: 1
