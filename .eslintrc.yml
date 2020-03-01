@@ -3,6 +3,9 @@ env:
 extends: eslint-config-airbnb-base
 rules:
   no-underscore-dangle: 0
+  comma-dangle:
+    - error
+    - only-multiline
   indent:
     - 2
     - 2
