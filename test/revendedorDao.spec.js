@@ -140,4 +140,86 @@ describe('Testing RevendedorDao', () => {
       });
     });
   });
+  describe('create register function', () => {
+    describe('And the createRevendedorTable function returns error', () => {
+      let revendedorDao;
+      before('Create Dao', () => {
+        revendedorDao = new RevendedorDao();
+      });
+      before('Mock createRevendedorTable functon', () => {
+        const fake = sinon.fake.throws('Error creating table');
+        sinon.replace(revendedorDao, 'createRevendedorTable', fake);
+      });
+      it('should return error', async () => {
+        expect(revendedorDao.create()).to.be.rejectedWith(Error, 'Error creating table');
+      });
+      after('Restore Mock', () => {
+        sinon.restore();
+      });
+    });
+    describe('And the validateSchema function returns error', () => {
+      let revendedorDao;
+      before('Create Dao', () => {
+        revendedorDao = new RevendedorDao();
+      });
+      it('should return error', async () => {
+        await expect(revendedorDao.create({})).to.be.rejectedWith(Error, 'Nome inválido');
+      });
+      after('Remove created db', () => {
+        fs.unlinkSync('data.db');
+      });
+    });
+    describe('And the create function goes ok', () => {
+      let revendedorDao;
+      before('Create Dao', () => {
+        revendedorDao = new RevendedorDao();
+      });
+      it('should return the created item', async () => {
+        let result = await revendedorDao.create({
+          nome: 'Revendedor 1',
+          cpf: '11111111111',
+          email: 'mail@mail.com',
+          senha: 'password'
+        });
+        expect(result).to.be.deep.equalInAnyOrder({
+          nome: 'Revendedor 1',
+          cpf: '11111111111',
+          email: 'mail@mail.com',
+          senha: 'password'
+        });
+      });
+      after('Remove created db', () => {
+        fs.unlinkSync('data.db');
+      });
+    });
+    describe('And the item is already at the db', () => {
+      let revendedorDao;
+      before('Create Dao', () => {
+        revendedorDao = new RevendedorDao();
+      });
+      it('should return error', async () => {
+        let result = await revendedorDao.create({
+          nome: 'Revendedor 1',
+          cpf: '11111111111',
+          email: 'mail@mail.com',
+          senha: 'password'
+        });
+        expect(result).to.be.deep.equalInAnyOrder({
+          nome: 'Revendedor 1',
+          cpf: '11111111111',
+          email: 'mail@mail.com',
+          senha: 'password'
+        });
+        await expect(revendedorDao.create({
+          nome: 'Revendedor 1',
+          cpf: '11111111111',
+          email: 'mail@mail.com',
+          senha: 'password'
+        })).to.be.rejectedWith(Error, 'Já existe um revendedor cadastrado com este CPF');
+      });
+      after('Remove created db', () => {
+        fs.unlinkSync('data.db');
+      });
+    });
+  });
 });

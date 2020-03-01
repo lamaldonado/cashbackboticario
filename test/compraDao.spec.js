@@ -200,4 +200,84 @@ describe('Testing CompraDao', () => {
       });
     });
   });
+  describe('create register function', () => {
+    describe('And the createCompraTable function returns error', () => {
+      let compraDao;
+      before('Create Dao', () => {
+        compraDao = new CompraDao();
+      });
+      before('Mock createCompraTable functon', () => {
+        const fake = sinon.fake.throws('Error creating table');
+        sinon.replace(compraDao, 'createCompraTable', fake);
+      });
+      it('should return error', async () => {
+        expect(compraDao.create()).to.be.rejectedWith(Error, 'Error creating table');
+      });
+      after('Restore Mock', () => {
+        sinon.restore();
+      });
+    });
+    describe('And the validateSchema function returns error', () => {
+      let compraDao;
+      before('Create Dao', () => {
+        compraDao = new CompraDao();
+      });
+      it('should return error', async () => {
+        await expect(compraDao.create({})).to.be.rejectedWith(Error, 'Código inválido');
+      });
+      after('Remove created db', () => {
+        fs.unlinkSync('data.db');
+      });
+    });
+    describe('And the create function goes ok with status "Em validação"', () => {
+      let compraDao;
+      before('Create Dao', () => {
+        compraDao = new CompraDao();
+      });
+      it('should return the created item', async () => {
+        let result = await compraDao.create({
+          codigo: '123',
+          cpf: '11111111111',
+          valor: '12,34',
+          data: '01/01/2020',
+          status: 'Em validação'
+        });
+        expect(result).to.be.deep.equalInAnyOrder({
+          codigo: '123',
+          cpf: '11111111111',
+          valor: '12,34',
+          data: '01/01/2020',
+          status: 'Em validação'
+        });
+      });
+      after('Remove created db', () => {
+        fs.unlinkSync('data.db');
+      });
+    });
+    describe('And the create function goes ok with status "Aprovado"', () => {
+      let compraDao;
+      before('Create Dao', () => {
+        compraDao = new CompraDao();
+      });
+      it('should return the created item', async () => {
+        let result = await compraDao.create({
+          codigo: '123',
+          cpf: '11111111111',
+          valor: '12,34',
+          data: '01/01/2020',
+          status: 'Aprovado'
+        });
+        expect(result).to.be.deep.equalInAnyOrder({
+          codigo: '123',
+          cpf: '11111111111',
+          valor: '12,34',
+          data: '01/01/2020',
+          status: 'Aprovado'
+        });
+      });
+      after('Remove created db', () => {
+        fs.unlinkSync('data.db');
+      });
+    });
+  });
 });
