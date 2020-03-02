@@ -14,25 +14,6 @@ class SqliteDb {
     }
   }
 
-  /* async getDb(sql, params) {
-    let count = 0;
-    let result;
-    do {
-      try {
-        result = await this.db.get(sql, params);
-        return result;
-      } catch (err) {
-        if (err.message.indexOf('SQLITE_BUSY') > -1) { // The database is busy
-          count += 1;
-          await sleep(Math.floor(Math.random() * (500 - 150 + 1) + 150));
-        } else if (err) {
-          throw Error(err);
-        }
-      }
-    } while (count <= MAXTRIES);
-    return result;
-  } */
-
   async runDb(sql, params) {
     try {
       await this.db.run(sql, params);
@@ -53,25 +34,23 @@ class SqliteDb {
     });
   }
 
-  /* async getData(sql, params) {
+  async runAll(sql, params) {
     try {
-      await this.openDb();
+      return (await this.db.all(sql, params));
     } catch (err) {
-      throw Error(err.message);
+      throw Error(err);
     }
-    let returnedRow;
+  }
+
+  async getDb(sql, params) {
+    let result;
     try {
-      returnedRow = await this.getDb(sql, params);
+      result = await this.db.get(sql, params);
     } catch (err) {
-      throw Error(err.message);
+      throw Error(err);
     }
-    try {
-      await this.closeDb();
-    } catch (err) {
-      throw Error(err.message);
-    }
-    return returnedRow;
-  } */
+    return result;
+  }
 
   async runSql(sql, params) {
     try {
@@ -89,6 +68,46 @@ class SqliteDb {
     } catch (err) {
       throw Error(err.message);
     }
+  }
+
+  async getData(sql, params) {
+    try {
+      await this.openDb();
+    } catch (err) {
+      throw Error(err.message);
+    }
+    let returnedRow;
+    try {
+      returnedRow = await this.getDb(sql, params);
+    } catch (err) {
+      throw Error(err.message);
+    }
+    try {
+      await this.closeDb();
+    } catch (err) {
+      throw Error(err.message);
+    }
+    return returnedRow;
+  }
+
+  async getAllData(sql, params) {
+    try {
+      await this.openDb();
+    } catch (err) {
+      throw Error(err.message);
+    }
+    let rows;
+    try {
+      rows = await this.runAll(sql, params);
+    } catch (err) {
+      throw Error(err.message);
+    }
+    try {
+      await this.closeDb();
+    } catch (err) {
+      throw Error(err.message);
+    }
+    return rows;
   }
 }
 

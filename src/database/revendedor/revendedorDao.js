@@ -62,6 +62,26 @@ senha text)`;
     }
     return receivedData;
   }
+
+  // Retorna um registro de um determinado CPF
+  async findByCpf(cpf) {
+    if (this.tableCreated === false) {
+      try {
+        await this.createRevendedorTable();
+      } catch (err) {
+        throw Error(err);
+      }
+    }
+    let revendedor;
+    const sql = 'SELECT * FROM revendedor WHERE cpf = ?';
+    const params = [cpf];
+    try {
+      revendedor = await this.sqlitedb.getData(sql, params);
+    } catch (err) {
+      throw Error(err);
+    }
+    return revendedor;
+  }
 }
 
 module.exports = RevendedorDao;

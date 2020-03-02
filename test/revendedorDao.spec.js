@@ -222,4 +222,80 @@ describe('Testing RevendedorDao', () => {
       });
     });
   });
+  describe('find by cpf function', () => {
+    describe('And the createRevendedorTable function returns error', () => {
+      let revendedorDao;
+      before('Create Dao', () => {
+        revendedorDao = new RevendedorDao();
+      });
+      before('Mock createRevendedorTable functon', () => {
+        const fake = sinon.fake.throws('Error creating table');
+        sinon.replace(revendedorDao, 'createRevendedorTable', fake);
+      });
+      it('should return error', async () => {
+        await expect(revendedorDao.findByCpf()).to.be.rejectedWith(Error, 'Error creating table');
+      });
+      after('Restore Mock', () => {
+        sinon.restore();
+      });
+    });
+    describe('And the getData function returns error', () => {
+      let revendedorDao;
+      before('Create Dao', () => {
+        revendedorDao = new RevendedorDao();
+      });
+      before('Mock getData functon', () => {
+        const fake = sinon.fake.throws('Error getting data from table');
+        sinon.replace(SqliteDb.prototype, 'getData', fake);
+      });
+      it('should return error', async () => {
+        await expect(revendedorDao.findByCpf('123')).to.be.rejectedWith(Error, 'Error getting data from table');
+      });
+      after('Restore Mock', () => {
+        sinon.restore();
+      });
+      after('Remove created db', () => {
+        fs.unlinkSync('data.db');
+      });
+    });
+    describe('And there is no item on db', () => {
+      let revendedorDao;
+      before('Create Dao', () => {
+        revendedorDao = new RevendedorDao();
+      });
+      it('should return undefined', async () => {
+        let result = await revendedorDao.findByCpf('123');
+        expect(result).to.be.eq(undefined);
+      });
+      after('Remove created db', () => {
+        fs.unlinkSync('data.db');
+      });
+    });
+    describe('And there is one item on db', () => {
+      let revendedorDao;
+      before('Create Dao', () => {
+        revendedorDao = new RevendedorDao();
+      });
+      before('Create an register on db', async () => {
+        await revendedorDao.create({
+          nome: 'Revendedor 1',
+          cpf: '11111111111',
+          email: 'mail@mail.com',
+          senha: 'password'
+        });
+      });
+      it('should return one item', async () => {
+        let result = await revendedorDao.findByCpf('11111111111');
+        expect(result).to.be.deep.equalInAnyOrder({
+          nome: 'Revendedor 1',
+          cpf: '11111111111',
+          email: 'mail@mail.com',
+          senha: 'password'
+        });
+      });
+      after('Remove created db', () => {
+        fs.unlinkSync('data.db');
+      });
+    });
+  });
 });

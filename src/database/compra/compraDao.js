@@ -13,9 +13,10 @@ class CompraDao {
   // Cria a tabela
   async createCompraTable() {
     const sql = `CREATE TABLE IF NOT EXISTS
-Compra (cpf text primary key,
+Compra (id integer primary key autoincrement,
+cpf text,
 codigo text,
-valor text,
+valor real,
 data text,
 status text)`;
     try {
@@ -65,6 +66,26 @@ status text)`;
       throw Error(err.message);
     }
     return receivedData;
+  }
+
+  // Retorna um registro de um determinado CPF
+  async findByCpf(cpf) {
+    if (this.tableCreated === false) {
+      try {
+        await this.createCompraTable();
+      } catch (err) {
+        throw Error(err);
+      }
+    }
+    let compras;
+    const sql = 'SELECT * FROM compra WHERE cpf = ?';
+    const params = [cpf];
+    try {
+      compras = await this.sqlitedb.getAllData(sql, params);
+    } catch (err) {
+      throw Error(err);
+    }
+    return compras;
   }
 }
 

@@ -12,7 +12,7 @@ chai.use(require('deep-equal-in-any-order'));
 
 describe('Testing CompraDao', () => {
   describe('create table function', () => {
-    describe('And the createRevendedorTable function returns error', () => {
+    describe('And the createCompraTable function returns error', () => {
       let compraDao;
       before('Create Dao', () => {
         compraDao = new CompraDao();
@@ -274,6 +274,129 @@ describe('Testing CompraDao', () => {
           data: '01/01/2020',
           status: 'Aprovado'
         });
+      });
+      after('Remove created db', () => {
+        fs.unlinkSync('data.db');
+      });
+    });
+  });
+  describe('find by cpf function', () => {
+    describe('And the createCompraTable function returns error', () => {
+      let compraDao;
+      before('Create Dao', () => {
+        compraDao = new CompraDao();
+      });
+      before('Mock createCompraTable functon', () => {
+        const fake = sinon.fake.throws('Error creating table');
+        sinon.replace(compraDao, 'createCompraTable', fake);
+      });
+      it('should return error', async () => {
+        await expect(compraDao.findByCpf()).to.be.rejectedWith(Error, 'Error creating table');
+      });
+      after('Restore Mock', () => {
+        sinon.restore();
+      });
+    });
+    describe('And the getAllData function returns error', () => {
+      let compraDao;
+      before('Create Dao', () => {
+        compraDao = new CompraDao();
+      });
+      before('Mock getAllData functon', () => {
+        const fake = sinon.fake.throws('Error getting data from table');
+        sinon.replace(SqliteDb.prototype, 'getAllData', fake);
+      });
+      it('should return error', async () => {
+        await expect(compraDao.findByCpf('123')).to.be.rejectedWith(Error, 'Error getting data from table');
+      });
+      after('Restore Mock', () => {
+        sinon.restore();
+      });
+      after('Remove created db', () => {
+        fs.unlinkSync('data.db');
+      });
+    });
+    describe('And there is no item on db', () => {
+      let compraDao;
+      before('Create Dao', () => {
+        compraDao = new CompraDao();
+      });
+      it('should return an empty array', async () => {
+        let result = await compraDao.findByCpf('123');
+        expect(result).to.be.deep.equalInAnyOrder([]);
+      });
+      after('Remove created db', () => {
+        fs.unlinkSync('data.db');
+      });
+    });
+    describe('And there is one item on db', () => {
+      let compraDao;
+      before('Create Dao', () => {
+        compraDao = new CompraDao();
+      });
+      before('Create an register on db', async () => {
+        await compraDao.create({
+          codigo: '123',
+          cpf: '11111111111',
+          valor: '12,34',
+          data: '01/01/2020',
+          status: 'Em validação'
+        });
+      });
+      it('should return an array with one item', async () => {
+        let result = await compraDao.findByCpf('11111111111');
+        expect(result).to.be.deep.equalInAnyOrder([{
+          id: 1,
+          codigo: '123',
+          cpf: '11111111111',
+          valor: '12,34',
+          data: '01/01/2020',
+          status: 'Em validação'
+        }]);
+      });
+      after('Remove created db', () => {
+        fs.unlinkSync('data.db');
+      });
+    });
+    describe('And there is two items on db', () => {
+      let compraDao;
+      before('Create Dao', () => {
+        compraDao = new CompraDao();
+      });
+      before('Create two registers on db', async () => {
+        await compraDao.create({
+          codigo: '123',
+          cpf: '11111111111',
+          valor: '12,34',
+          data: '01/01/2020',
+          status: 'Em validação'
+        });
+        await compraDao.create({
+          codigo: '321',
+          cpf: '11111111111',
+          valor: '43,21',
+          data: '01/01/2020',
+          status: 'Em validação'
+        });
+      });
+      it('should return an array with two items', async () => {
+        let result = await compraDao.findByCpf('11111111111');
+        expect(result).to.be.deep.equalInAnyOrder([{
+          id: 1,
+          codigo: '123',
+          cpf: '11111111111',
+          valor: '12,34',
+          data: '01/01/2020',
+          status: 'Em validação'
+        },
+        {
+          id: 2,
+          codigo: '321',
+          cpf: '11111111111',
+          valor: '43,21',
+          data: '01/01/2020',
+          status: 'Em validação'
+        }]);
       });
       after('Remove created db', () => {
         fs.unlinkSync('data.db');
