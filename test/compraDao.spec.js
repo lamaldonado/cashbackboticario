@@ -17,12 +17,12 @@ describe('Testing CompraDao', () => {
       before('Create Dao', () => {
         compraDao = new CompraDao();
       });
-      before('Mock SqliteDb openDb functon', () => {
+      before('Mock SqliteDb openDb function', () => {
         const fake = sinon.fake.throws('Error opening DB');
         sinon.replace(SqliteDb.prototype, 'openDb', fake);
       });
       it('should return error', async () => {
-        expect(compraDao.createCompraTable()).to.be.rejectedWith(Error);
+        await expect(compraDao.createCompraTable()).to.be.rejectedWith(Error, 'Error opening DB');
       });
       after('Restore Mock', () => {
         sinon.restore();
@@ -49,7 +49,7 @@ describe('Testing CompraDao', () => {
         compraDao = new CompraDao();
       });
       it('should return error', async () => {
-        expect(compraDao.validateSchema({})).to.be.rejectedWith(Error, 'Código inválido');
+        await expect(compraDao.validateSchema({})).to.be.rejectedWith(Error, 'Código inválido');
       });
     });
     describe('And the codigo is a number', () => {
@@ -58,7 +58,7 @@ describe('Testing CompraDao', () => {
         compraDao = new CompraDao();
       });
       it('should return error', async () => {
-        expect(compraDao.validateSchema({
+        await expect(compraDao.validateSchema({
           codigo: 1
         })).to.be.rejectedWith(Error, 'Código inválido');
       });
@@ -69,9 +69,9 @@ describe('Testing CompraDao', () => {
         compraDao = new CompraDao();
       });
       it('should return error', async () => {
-        expect(compraDao.validateSchema({
+        await expect(compraDao.validateSchema({
           codigo: '1'
-        })).to.be.rejectedWith(Error, 'CPF inválido - deve conter 11 dígitos');
+        })).to.be.rejectedWith(Error, 'CPF inválido - deve conter 11 dígitos sem pontos e traços');
       });
     });
     describe('And the cpf is invalid', () => {
@@ -80,10 +80,10 @@ describe('Testing CompraDao', () => {
         compraDao = new CompraDao();
       });
       it('should return error', async () => {
-        expect(compraDao.validateSchema({
+        await expect(compraDao.validateSchema({
           codigo: '1',
           cpf: '0123'
-        })).to.be.rejectedWith(Error, 'CPF inválido - deve conter 11 dígitos');
+        })).to.be.rejectedWith(Error, 'CPF inválido - deve conter 11 dígitos sem pontos e traços');
       });
     });
     describe('And the valor is not present', () => {
@@ -92,7 +92,7 @@ describe('Testing CompraDao', () => {
         compraDao = new CompraDao();
       });
       it('should return error', async () => {
-        expect(compraDao.validateSchema({
+        await expect(compraDao.validateSchema({
           codigo: '1',
           cpf: '11111111111'
         })).to.be.rejectedWith(Error, 'Valor inválido');
@@ -104,7 +104,7 @@ describe('Testing CompraDao', () => {
         compraDao = new CompraDao();
       });
       it('should return error', async () => {
-        expect(compraDao.validateSchema({
+        await expect(compraDao.validateSchema({
           codigo: '1',
           cpf: '11111111111',
           valor: 1
@@ -117,7 +117,7 @@ describe('Testing CompraDao', () => {
         compraDao = new CompraDao();
       });
       it('should return error', async () => {
-        expect(compraDao.validateSchema({
+        await expect(compraDao.validateSchema({
           codigo: '1',
           cpf: '11111111111',
           valor: '12,34'
@@ -130,7 +130,7 @@ describe('Testing CompraDao', () => {
         compraDao = new CompraDao();
       });
       it('should return error', async () => {
-        expect(compraDao.validateSchema({
+        await expect(compraDao.validateSchema({
           codigo: '1',
           cpf: '11111111111',
           valor: '12,34',
@@ -144,7 +144,7 @@ describe('Testing CompraDao', () => {
         compraDao = new CompraDao();
       });
       it('should return error', async () => {
-        expect(compraDao.validateSchema({
+        await expect(compraDao.validateSchema({
           codigo: '1',
           cpf: '11111111111',
           valor: '12,34',
@@ -158,7 +158,7 @@ describe('Testing CompraDao', () => {
         compraDao = new CompraDao();
       });
       it('should return error', async () => {
-        expect(compraDao.validateSchema({
+        await expect(compraDao.validateSchema({
           codigo: '1',
           cpf: '11111111111',
           valor: '12,34',
@@ -206,12 +206,12 @@ describe('Testing CompraDao', () => {
       before('Create Dao', () => {
         compraDao = new CompraDao();
       });
-      before('Mock createCompraTable functon', () => {
+      before('Mock createCompraTable function', () => {
         const fake = sinon.fake.throws('Error creating table');
         sinon.replace(compraDao, 'createCompraTable', fake);
       });
       it('should return error', async () => {
-        expect(compraDao.create()).to.be.rejectedWith(Error, 'Error creating table');
+        await expect(compraDao.create()).to.be.rejectedWith(Error, 'Error creating table');
       });
       after('Restore Mock', () => {
         sinon.restore();
@@ -286,7 +286,7 @@ describe('Testing CompraDao', () => {
       before('Create Dao', () => {
         compraDao = new CompraDao();
       });
-      before('Mock createCompraTable functon', () => {
+      before('Mock createCompraTable function', () => {
         const fake = sinon.fake.throws('Error creating table');
         sinon.replace(compraDao, 'createCompraTable', fake);
       });
@@ -302,7 +302,7 @@ describe('Testing CompraDao', () => {
       before('Create Dao', () => {
         compraDao = new CompraDao();
       });
-      before('Mock getAllData functon', () => {
+      before('Mock getAllData function', () => {
         const fake = sinon.fake.throws('Error getting data from table');
         sinon.replace(SqliteDb.prototype, 'getAllData', fake);
       });

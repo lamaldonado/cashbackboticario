@@ -17,12 +17,12 @@ describe('Testing RevendedorDao', () => {
       before('Create Dao', () => {
         revendedorDao = new RevendedorDao();
       });
-      before('Mock SqliteDb openDb functon', () => {
+      before('Mock SqliteDb openDb function', () => {
         const fake = sinon.fake.throws('Error opening DB');
         sinon.replace(SqliteDb.prototype, 'openDb', fake);
       });
       it('should return error', async () => {
-        expect(revendedorDao.createRevendedorTable()).to.be.rejectedWith(Error);
+        await expect(revendedorDao.createRevendedorTable()).to.be.rejectedWith(Error, 'Error opening DB');
       });
       after('Restore Mock', () => {
         sinon.restore();
@@ -49,7 +49,7 @@ describe('Testing RevendedorDao', () => {
         revendedorDao = new RevendedorDao();
       });
       it('should return error', async () => {
-        expect(revendedorDao.validateSchema({})).to.be.rejectedWith(Error, 'Nome inválido');
+        await expect(revendedorDao.validateSchema({})).to.be.rejectedWith(Error, 'Nome inválido');
       });
     });
     describe('And the name is a number', () => {
@@ -58,7 +58,7 @@ describe('Testing RevendedorDao', () => {
         revendedorDao = new RevendedorDao();
       });
       it('should return error', async () => {
-        expect(revendedorDao.validateSchema({
+        await expect(revendedorDao.validateSchema({
           nome: 1
         })).to.be.rejectedWith(Error, 'Nome inválido');
       });
@@ -69,9 +69,9 @@ describe('Testing RevendedorDao', () => {
         revendedorDao = new RevendedorDao();
       });
       it('should return error', async () => {
-        expect(revendedorDao.validateSchema({
+        await expect(revendedorDao.validateSchema({
           nome: 'name'
-        })).to.be.rejectedWith(Error, 'CPF inválido - deve conter 11 dígitos');
+        })).to.be.rejectedWith(Error, 'CPF inválido - deve conter 11 dígitos sem pontos e traços');
       });
     });
     describe('And the cpf is invalid', () => {
@@ -80,10 +80,10 @@ describe('Testing RevendedorDao', () => {
         revendedorDao = new RevendedorDao();
       });
       it('should return error', async () => {
-        expect(revendedorDao.validateSchema({
+        await expect(revendedorDao.validateSchema({
           nome: 'name',
           cpf: '0123'
-        })).to.be.rejectedWith(Error, 'CPF inválido - deve conter 11 dígitos');
+        })).to.be.rejectedWith(Error, 'CPF inválido - deve conter 11 dígitos sem pontos e traços');
       });
     });
     describe('And the email is not present', () => {
@@ -92,7 +92,7 @@ describe('Testing RevendedorDao', () => {
         revendedorDao = new RevendedorDao();
       });
       it('should return error', async () => {
-        expect(revendedorDao.validateSchema({
+        await expect(revendedorDao.validateSchema({
           nome: 'name',
           cpf: '11111111111'
         })).to.be.rejectedWith(Error, 'E-mail inválido');
@@ -104,7 +104,7 @@ describe('Testing RevendedorDao', () => {
         revendedorDao = new RevendedorDao();
       });
       it('should return error', async () => {
-        expect(revendedorDao.validateSchema({
+        await expect(revendedorDao.validateSchema({
           nome: 'name',
           cpf: '11111111111',
           email: 'mail@'
@@ -117,7 +117,7 @@ describe('Testing RevendedorDao', () => {
         revendedorDao = new RevendedorDao();
       });
       it('should return error', async () => {
-        expect(revendedorDao.validateSchema({
+        await expect(revendedorDao.validateSchema({
           nome: 'name',
           cpf: '11111111111',
           email: 'mail@mail.com'
@@ -146,12 +146,12 @@ describe('Testing RevendedorDao', () => {
       before('Create Dao', () => {
         revendedorDao = new RevendedorDao();
       });
-      before('Mock createRevendedorTable functon', () => {
+      before('Mock createRevendedorTable function', () => {
         const fake = sinon.fake.throws('Error creating table');
         sinon.replace(revendedorDao, 'createRevendedorTable', fake);
       });
       it('should return error', async () => {
-        expect(revendedorDao.create()).to.be.rejectedWith(Error, 'Error creating table');
+        await expect(revendedorDao.create()).to.be.rejectedWith(Error, 'Error creating table');
       });
       after('Restore Mock', () => {
         sinon.restore();
@@ -228,7 +228,7 @@ describe('Testing RevendedorDao', () => {
       before('Create Dao', () => {
         revendedorDao = new RevendedorDao();
       });
-      before('Mock createRevendedorTable functon', () => {
+      before('Mock createRevendedorTable function', () => {
         const fake = sinon.fake.throws('Error creating table');
         sinon.replace(revendedorDao, 'createRevendedorTable', fake);
       });
@@ -244,7 +244,7 @@ describe('Testing RevendedorDao', () => {
       before('Create Dao', () => {
         revendedorDao = new RevendedorDao();
       });
-      before('Mock getData functon', () => {
+      before('Mock getData function', () => {
         const fake = sinon.fake.throws('Error getting data from table');
         sinon.replace(SqliteDb.prototype, 'getData', fake);
       });
