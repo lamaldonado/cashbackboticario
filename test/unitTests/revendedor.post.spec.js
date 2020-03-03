@@ -11,11 +11,10 @@ const { expect } = chai;
 chai.use(require('chai-as-promised'));
 chai.use(require('deep-equal-in-any-order'));
 
-const revendedorService = new RevendedorPostService();
-
 describe('Testing service revendedor post', () => {
   describe('revendedorService hashPassword function', () => {
     describe('and bcrypt hash function returns error', () => {
+      const revendedorService = new RevendedorPostService();
       before('Mock hash function', () => {
         const fake = sinon.fake.throws('Error hashing password');
         sinon.replace(bcrypt, 'hash', fake);
@@ -30,6 +29,7 @@ describe('Testing service revendedor post', () => {
   });
   describe('revendedorService create function', () => {
     describe('and hashPassword function returns error', () => {
+      const revendedorService = new RevendedorPostService();
       before('Mock hashPassword function', () => {
         const fake = sinon.fake.throws('Error hashing password');
         sinon.replace(RevendedorPostService.prototype, 'hashPassword', fake);
@@ -47,6 +47,7 @@ describe('Testing service revendedor post', () => {
       });
     });
     describe('and the password is not passed', () => {
+      const revendedorService = new RevendedorPostService();
       it('should return error', async () => {
         await expect(revendedorService.create({
           nome: 'Revendedor 1',
@@ -56,6 +57,7 @@ describe('Testing service revendedor post', () => {
       });
     });
     describe('and revendedorDao create function returns error', () => {
+      const revendedorService = new RevendedorPostService();
       before('Mock revendedorDao create function', () => {
         const fake = sinon.fake.throws('Error creating revendedor');
         sinon.replace(RevendedorDao.prototype, 'create', fake);
@@ -73,6 +75,7 @@ describe('Testing service revendedor post', () => {
       });
     });
     describe('and the revendedor is created', () => {
+      const revendedorService = new RevendedorPostService();
       it('should return the created item with password hashed', async () => {
         let result = await revendedorService.create({
           nome: 'Revendedor 1',
@@ -90,6 +93,7 @@ describe('Testing service revendedor post', () => {
       });
     });
     describe('and the revendedor cpf is already on DB', () => {
+      const revendedorService = new RevendedorPostService();
       before('create the item on db', async () => {
         await revendedorService.create({
           nome: 'Revendedor 1',

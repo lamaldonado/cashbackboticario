@@ -5,6 +5,7 @@ const cors = require('cors');
 
 const winston = require('./config/winston');
 const revendedorRoute = require('./src/routes/revendedor');
+const loginRoute = require('./src/routes/login');
 
 const app = express();
 const port = process.env.PORT || 9090;
@@ -16,6 +17,7 @@ const basePath = '/api';
 
 app.use(cors());
 app.use(`${basePath}/revendedor`, revendedorRoute);
+app.use(`${basePath}/login`, loginRoute);
 app.use((req, res) => {
   res.status(404).json({
     success: false,

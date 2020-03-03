@@ -6,6 +6,7 @@ const winston = require('../../../config/winston');
 class RevendedorService {
   constructor() {
     this.saltRounds = 10;
+    this.revendedorDao = new RevendedorDao();
   }
 
   async hashPassword(password) {
@@ -30,11 +31,9 @@ class RevendedorService {
       winston.error('Senha is required');
       throw Error('Senha is required');
     }
-    winston.debug('Creating RevendedorDao');
-    const revendedorDao = new RevendedorDao();
     let hashedPassword;
     try {
-      winston.debug('Calling revendedorDao.hashPassword');
+      winston.debug('Calling hashPassword');
       hashedPassword = await this.hashPassword(revendedor.senha);
     } catch (err) {
       winston.error(`Error hasing password: ${err.message}`);
@@ -45,7 +44,7 @@ class RevendedorService {
     let result;
     try {
       winston.debug('Calling revendedorDao.create');
-      result = await revendedorDao.create(revendedorToStore);
+      result = await this.revendedorDao.create(revendedorToStore);
     } catch (err) {
       winston.error(`Error creating revendedor: ${err.message}`);
       throw Error(err.message);
