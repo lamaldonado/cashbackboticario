@@ -3,8 +3,8 @@ const sinon = require('sinon');
 const fs = require('fs');
 const bcrypt = require('bcrypt');
 
-const RevendedorPostService = require('../src/services/revendedor/post');
-const RevendedorDao = require('../src/database/revendedor/revendedorDao');
+const RevendedorPostService = require('../../src/services/revendedor/post');
+const RevendedorDao = require('../../src/database/revendedor/revendedorDao');
 
 const { expect } = chai;
 

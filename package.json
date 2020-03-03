@@ -4,7 +4,7 @@
   "description": "Desafio CashBack Boticário",
   "main": "index.js",
   "scripts": {
-    "test": "nyc --reporter=html --reporter=text mocha -t 40000",
+    "test": "nyc --reporter=html --reporter=text mocha --recursive -t 40000",
     "coverage": "nyc check-coverage --lines 75",
     "linter": "eslint index.js src/**/*.js"
   },

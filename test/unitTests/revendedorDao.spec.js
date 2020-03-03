@@ -2,8 +2,8 @@ const chai = require('chai');
 const sinon = require('sinon');
 const fs = require('fs');
 
-const RevendedorDao = require('../src/database/revendedor/revendedorDao');
-const { SqliteDb } = require('../src/database/sqlitedb');
+const RevendedorDao = require('../../src/database/revendedor/revendedorDao');
+const { SqliteDb } = require('../../src/database/sqlitedb');
 
 const { expect } = chai;
 
