@@ -6,7 +6,7 @@ const winston = require('../../../config/winston');
 
 class LoginService {
   constructor() {
-    this.jwtSecret = process.env.JWTSECRET || 'BOTICARIO'; // TODO Modificar para variavel de ambiente
+    this.jwtSecret = process.env.JWTSECRET || 'EurevendedorOBoticárioqueroterbenefíciosdeacordocomomeuvolumedevendas'; // TODO Modificar para variavel de ambiente
   }
 
   static async comparePassword(password, hashedPassword) {
