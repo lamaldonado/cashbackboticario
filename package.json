@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/lamaldonado/cashbackboticario#readme",
   "devDependencies": {
+    "axios-mock-adapter": "^1.17.0",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "deep-equal-in-any-order": "^1.0.24",
@@ -36,6 +37,7 @@
     "sinon": "^9.0.0"
   },
   "dependencies": {
+    "axios": "^0.19.2",
     "bcrypt": "^4.0.1",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
