@@ -28,6 +28,46 @@ describe('Testing service revendedor post', () => {
     });
   });
   describe('revendedorService create function', () => {
+    describe('and the nome is not passed', () => {
+      const revendedorService = new RevendedorPostService();
+      it('should return error', async () => {
+        await expect(revendedorService.create({
+          cpf: '11111111111',
+          email: 'mail@mail.com',
+          senha: 'password'
+        })).to.be.rejectedWith(Error, 'Nome inválido');
+      });
+    });
+    describe('and the cpf is not passed', () => {
+      const revendedorService = new RevendedorPostService();
+      it('should return error', async () => {
+        await expect(revendedorService.create({
+          nome: 'Revendedor 1',
+          email: 'mail@mail.com',
+          senha: 'password'
+        })).to.be.rejectedWith(Error, 'CPF inválido - deve conter 11 dígitos sem pontos e traços');
+      });
+    });
+    describe('and the email is not passed', () => {
+      const revendedorService = new RevendedorPostService();
+      it('should return error', async () => {
+        await expect(revendedorService.create({
+          nome: 'Revendedor 1',
+          cpf: '11111111111',
+          senha: 'password'
+        })).to.be.rejectedWith(Error, 'E-mail inválido');
+      });
+    });
+    describe('and the senha is not passed', () => {
+      const revendedorService = new RevendedorPostService();
+      it('should return error', async () => {
+        await expect(revendedorService.create({
+          nome: 'Revendedor 1',
+          cpf: '11111111111',
+          email: 'mail@mail.com'
+        })).to.be.rejectedWith(Error, 'Senha inválida');
+      });
+    });
     describe('and hashPassword function returns error', () => {
       const revendedorService = new RevendedorPostService();
       before('Mock hashPassword function', () => {
@@ -44,16 +84,6 @@ describe('Testing service revendedor post', () => {
       });
       after('Restore Mock', () => {
         sinon.restore();
-      });
-    });
-    describe('and the password is not passed', () => {
-      const revendedorService = new RevendedorPostService();
-      it('should return error', async () => {
-        await expect(revendedorService.create({
-          nome: 'Revendedor 1',
-          cpf: '11111111111',
-          email: 'mail@mail.com'
-        })).to.be.rejectedWith(Error, 'Senha is required');
       });
     });
     describe('and revendedorDao create function returns error', () => {

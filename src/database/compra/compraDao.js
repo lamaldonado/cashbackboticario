@@ -68,7 +68,7 @@ status text)`;
     return receivedData;
   }
 
-  // Retorna um registro de um determinado CPF
+  // Retorna um ou mais registros de um determinado CPF
   async findByCpf(cpf) {
     if (this.tableCreated === false) {
       try {

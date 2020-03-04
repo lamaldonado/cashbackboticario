@@ -9,6 +9,7 @@ class LoginService {
     this.jwtSecret = process.env.JWTSECRET || 'EurevendedorOBoticárioqueroterbenefíciosdeacordocomomeuvolumedevendas'; // TODO Modificar para variavel de ambiente
   }
 
+  // Compara a senha passada com a senha armazenada
   static async comparePassword(password, hashedPassword) {
     winston.debug('Entering LoginService.comparePassword');
     const result = await new Promise((resolve, reject) => {
@@ -25,6 +26,7 @@ class LoginService {
     return result;
   }
 
+  // Efetua o login e retorna um JWT
   async login(revendedor) {
     winston.debug('Entering LoginService.login');
     if (!revendedor.cpf) {
