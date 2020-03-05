@@ -7,7 +7,7 @@ const winston = require('../../../config/winston');
 
 const comprasService = new ComprasService();
 
-router.get('/', async (req, res) => {
+router.post('/', async (req, res) => {
   winston.debug('Entering Compras POST');
   if (!req.body.cpf) {
     res.status(422).json({
