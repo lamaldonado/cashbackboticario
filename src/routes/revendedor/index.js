@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 
-const RevendedorService = require('../../services/revendedor/post');
+const RevendedorService = require('../../services/revendedor');
 const winston = require('../../../config/winston');
 
 const revendedorService = new RevendedorService();

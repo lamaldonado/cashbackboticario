@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 
-const ComprasService = require('../../services/compras/post');
+const ComprasService = require('../../services/compras');
 const winston = require('../../../config/winston');
 
 const comprasService = new ComprasService();

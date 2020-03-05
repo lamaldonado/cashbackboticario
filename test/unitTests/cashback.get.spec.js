@@ -3,7 +3,7 @@ const sinon = require('sinon');
 const axios = require('axios');
 const MockAdapter = require('axios-mock-adapter');
 
-const { cashback } = require('../../src/services/cashback/get');
+const { cashback } = require('../../src/services/cashback');
 
 const { expect } = chai;
 

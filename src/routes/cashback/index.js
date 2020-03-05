@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 
-const { cashback } = require('../../services/cashback/get');
+const { cashback } = require('../../services/cashback');
 
 router.get('/', async (req, res) => {
   if (!req.query.cpf) {

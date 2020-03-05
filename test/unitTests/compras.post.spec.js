@@ -2,9 +2,9 @@ const chai = require('chai');
 const sinon = require('sinon');
 const fs = require('fs');
 
-const RevendedorPostService = require('../../src/services/revendedor/post');
+const RevendedorPostService = require('../../src/services/revendedor');
 const RevendedorDao = require('../../src/database/revendedor/revendedorDao');
-const ComprasPostService = require('../../src/services/compras/post');
+const ComprasPostService = require('../../src/services/compras');
 const CompraDao = require('../../src/database/compra/compraDao');
 
 const { expect } = chai;

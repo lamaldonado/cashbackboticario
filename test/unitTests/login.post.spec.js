@@ -4,9 +4,9 @@ const fs = require('fs');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const LoginPostService = require('../../src/services/login/post');
+const LoginPostService = require('../../src/services/login');
 const RevendedorDao = require('../../src/database/revendedor/revendedorDao');
-const RevendedorPostService = require('../../src/services/revendedor/post');
+const RevendedorPostService = require('../../src/services/revendedor');
 
 const { expect } = chai;
 

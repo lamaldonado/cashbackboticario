@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 
-const LoginService = require('../../services/login/post');
+const LoginService = require('../../services/login');
 const winston = require('../../../config/winston');
 
 const loginService = new LoginService();
