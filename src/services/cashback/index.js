@@ -8,8 +8,8 @@ const cashback = async (cpf) => {
   try {
     winston.debug(`Retrieving cashback value for CPF: ${cpf}`);
     result = await axios.get(`${url}${cpf}`, {
-      'headers': {
-        'token': '&#39;ZXPURQOARHiMc6Y0flhRC1LVlZQVFRnm&#39;'
+      headers: {
+        token: '&#39;ZXPURQOARHiMc6Y0flhRC1LVlZQVFRnm&#39;'
       }
     });
   } catch (err) {
@@ -19,6 +19,6 @@ const cashback = async (cpf) => {
   winston.debug('Cashback retrieved');
   winston.debug(JSON.stringify(result.data));
   return result.data;
-}
+};
 
 module.exports.cashback = cashback;

@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 const { cashback } = require('../../services/cashback');
+const winston = require('../../../config/winston');
 
 router.get('/', async (req, res) => {
   if (!req.query.cpf) {

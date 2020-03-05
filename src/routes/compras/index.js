@@ -41,4 +41,34 @@ router.post('/', async (req, res) => {
   }
 });
 
+router.get('/', async (req, res) => {
+  winston.debug('Entering Compras GET');
+  if (!req.body.cpf) {
+    res.status(422).json({
+      success: false,
+      message: 'CPF inválido - deve conter 11 dígitos sem pontos e traços'
+    });
+    return;
+  }
+  let result;
+  try {
+    winston.debug('Calling comprasService.get');
+    result = await comprasService.get(req.body.cpf);
+    winston.debug('Compras retrieved');
+    winston.debug(JSON.stringify(result));
+    res.status(200).json({
+      success: true,
+      message: 'Compras retrieved',
+      compras: result
+    });
+  } catch (err) {
+    winston.error(`Error retrieving compra: ${err.message}`);
+    res.status(500).json({
+      success: false,
+      message: 'Invalid Request',
+      error: err.message
+    });
+  }
+});
+
 module.exports = router;
