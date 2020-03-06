@@ -30,8 +30,12 @@ class LoginService {
   async login(revendedor) {
     winston.debug('Entering LoginService.login');
     if (!revendedor.cpf) {
-      winston.error('CPF is required');
-      throw Error('CPF is required');
+      winston.error('CPF é obrigatório');
+      throw Error('CPF é obrigatório');
+    }
+    if (!revendedor.senha) {
+      winston.error('Senha é obrigatório');
+      throw Error('Senha é obrigatório');
     }
     const revendedorDao = new RevendedorDao();
     let revendedorFromDatabase;

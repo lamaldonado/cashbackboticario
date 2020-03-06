@@ -30,4 +30,10 @@ app.use((req, res) => {
   });
 });
 
-app.listen(port, () => winston.info(`Server runnning on port ${port}`));
+const server = app.listen(port, () => {
+  winston.info(`Server runnning on port ${port}`);
+  app.emit('Server_started');
+});
+
+module.exports.app = app;
+module.exports.server = server;

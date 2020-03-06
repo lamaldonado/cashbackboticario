@@ -15,7 +15,7 @@ router.post('/', async (req, res) => {
     result = await revendedorService.create(req.body);
     winston.debug('Revendedor created');
     winston.debug(JSON.stringify(result));
-    res.status(200).json({
+    res.status(201).json({
       success: true,
       message: 'Revendedor created',
       nome: result.nome,
@@ -24,11 +24,19 @@ router.post('/', async (req, res) => {
     });
   } catch (err) {
     winston.error(`Error creating revendedor: ${err.message}`);
-    res.status(500).json({
-      success: false,
-      message: 'Invalid Request',
-      error: err.message
-    });
+    if (err.message === 'Já existe um revendedor cadastrado com este CPF') {
+      res.status(409).json({
+        success: false,
+        message: 'Invalid Request',
+        error: err.message
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: 'Invalid Request',
+        error: err.message
+      });
+    }
   }
 });
 

@@ -4,7 +4,8 @@
   "description": "Desafio CashBack Boticário",
   "main": "index.js",
   "scripts": {
-    "test": "nyc --reporter=html --reporter=text mocha --recursive -t 40000",
+    "start": "node index.js",
+    "test": "nyc --reporter=html --reporter=text mocha --recursive -t 10000",
     "coverage": "nyc check-coverage --lines 75",
     "linter": "eslint index.js 'src/**/*.js'"
   },
@@ -24,9 +25,9 @@
   },
   "homepage": "https://github.com/lamaldonado/cashbackboticario#readme",
   "devDependencies": {
-    "axios-mock-adapter": "^1.17.0",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
+    "chai-http": "^4.3.0",
     "deep-equal-in-any-order": "^1.0.24",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",

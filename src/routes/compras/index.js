@@ -22,7 +22,7 @@ router.post('/', async (req, res) => {
     result = await comprasService.create(req.body);
     winston.debug('Compra created');
     winston.debug(JSON.stringify(result));
-    res.status(200).json({
+    res.status(201).json({
       success: true,
       message: 'Compra created',
       codigo: result.codigo,
@@ -33,17 +33,25 @@ router.post('/', async (req, res) => {
     });
   } catch (err) {
     winston.error(`Error creating compra: ${err.message}`);
-    res.status(500).json({
-      success: false,
-      message: 'Invalid Request',
-      error: err.message
-    });
+    if (err.message === 'Revendedor não encontrado') {
+      res.status(404).json({
+        success: false,
+        message: 'Invalid Request',
+        error: err.message
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: 'Invalid Request',
+        error: err.message
+      });
+    }
   }
 });
 
 router.get('/', async (req, res) => {
   winston.debug('Entering Compras GET');
-  if (!req.body.cpf) {
+  if (!req.query.cpf) {
     res.status(422).json({
       success: false,
       message: 'CPF inválido - deve conter 11 dígitos sem pontos e traços'
@@ -53,7 +61,7 @@ router.get('/', async (req, res) => {
   let result;
   try {
     winston.debug('Calling comprasService.get');
-    result = await comprasService.get(req.body.cpf);
+    result = await comprasService.get(req.query.cpf);
     winston.debug('Compras retrieved');
     winston.debug(JSON.stringify(result));
     res.status(200).json({
@@ -63,11 +71,19 @@ router.get('/', async (req, res) => {
     });
   } catch (err) {
     winston.error(`Error retrieving compra: ${err.message}`);
-    res.status(500).json({
-      success: false,
-      message: 'Invalid Request',
-      error: err.message
-    });
+    if (err.message === 'Revendedor não encontrado' || err.message === 'Compras não encontrado') {
+      res.status(404).json({
+        success: false,
+        message: 'Invalid Request',
+        error: err.message
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: 'Invalid Request',
+        error: err.message
+      });
+    }
   }
 });
 

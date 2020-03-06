@@ -84,7 +84,7 @@ describe('Testing service compra get', () => {
     describe('and the revendedor is not on DB', () => {
       const comprasService = new ComprasPostService();
       it('should return error', async () => {
-        await expect(comprasService.get('11111111111')).to.be.rejectedWith(Error, 'Revendedor not found');
+        await expect(comprasService.get('11111111111')).to.be.rejectedWith(Error, 'Revendedor não encontrado');
       });
       after('Remove created db', () => {
         fs.unlinkSync('data.db');
@@ -127,7 +127,7 @@ describe('Testing service compra get', () => {
         });
       });
       it('should return error', async () => {
-        await expect(comprasService.get('11111111111')).to.be.rejectedWith(Error, 'Compras not found');
+        await expect(comprasService.get('11111111111')).to.be.rejectedWith(Error, 'Compras não encontrado');
       });
       after('Remove created db', () => {
         fs.unlinkSync('data.db');
@@ -249,7 +249,6 @@ describe('Testing service compra get', () => {
         });
       });
     });
-
     describe('and there is more than on compra on DB', () => {
       describe('and value is less than 1000', () => {
         const revendedorService = new RevendedorPostService();

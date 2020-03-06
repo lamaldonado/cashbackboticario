@@ -82,7 +82,7 @@ describe('Testing service compra post', () => {
           cpf: '11111111111',
           valor: '12,34',
           data: '01/01/2020'
-        })).to.be.rejectedWith(Error, 'Revendedor not found');
+        })).to.be.rejectedWith(Error, 'Revendedor não encontrado');
       });
       after('Remove created db', () => {
         fs.unlinkSync('data.db');

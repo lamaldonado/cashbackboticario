@@ -51,8 +51,8 @@ class ComprasService {
       throw Error(err.message);
     }
     if (!revendedor) {
-      winston.error('Revendedor not found');
-      throw Error('Revendedor not found');
+      winston.error('Revendedor não encontrado');
+      throw Error('Revendedor não encontrado');
     }
     winston.debug('Revendedor retrieved');
     if (revendedor.cpf === '15350946056') {
@@ -115,8 +115,8 @@ class ComprasService {
       throw Error(err.message);
     }
     if (!revendedor) {
-      winston.error('Revendedor not found');
-      throw Error('Revendedor not found');
+      winston.error('Revendedor não encontrado');
+      throw Error('Revendedor não encontrado');
     }
     let compras;
     try {
@@ -127,8 +127,8 @@ class ComprasService {
       throw Error(err.message);
     }
     if (compras.length === 0) {
-      winston.error('Compras not found');
-      throw Error('Compras not found');
+      winston.error('Compras não encontrado');
+      throw Error('Compras não encontrado');
     }
     winston.debug('Calculating total amount');
     let totalValue = 0;

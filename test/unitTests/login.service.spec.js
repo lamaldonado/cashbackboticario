@@ -49,7 +49,15 @@ describe('Testing service revendedor post', () => {
       it('should return error', async () => {
         await expect(loginService.login({
           senha: 'password'
-        })).to.be.rejectedWith(Error, 'CPF is required');
+        })).to.be.rejectedWith(Error, 'CPF é obrigatório');
+      });
+    });
+    describe('and the senha is not passed', () => {
+      const loginService = new LoginPostService();
+      it('should return error', async () => {
+        await expect(loginService.login({
+          cpf: '11111111111'
+        })).to.be.rejectedWith(Error, 'Senha é obrigatório');
       });
     });
     describe('and RevendedorDao findByCpf function returns error', () => {
