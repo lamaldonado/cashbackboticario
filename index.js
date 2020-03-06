@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cors = require('cors');
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
 
 const winston = require('./config/winston');
 const revendedorRoute = require('./src/routes/revendedor');
@@ -10,6 +12,7 @@ const authentication = require('./src/routes/authentication');
 const compras = require('./src/routes/compras');
 const cashback = require('./src/routes/cashback');
 
+const swaggerDocument = YAML.load('./doc/swagger.yaml');
 const app = express();
 const port = process.env.PORT || 9090;
 
@@ -23,6 +26,7 @@ app.use(`${basePath}/revendedor`, revendedorRoute);
 app.use(`${basePath}/login`, loginRoute);
 app.use(`${basePath}/compras`, authentication, compras);
 app.use(`${basePath}/cashback`, authentication, cashback);
+app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use((req, res) => {
   res.status(404).json({
     success: false,

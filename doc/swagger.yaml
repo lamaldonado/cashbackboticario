@@ -1,0 +1,479 @@
+openapi: 3.0.0
+info:
+  version: "v1"
+  title: "Boticário CashBack"
+  description: |
+    Desafio "Eu revendedor 'O Boticário' quero ter benefícios de acordo com o meu volume de vendas"
+  contact:
+    name: Luiz Antonio Maldonado Marthos
+    email: lamaldonado@gmail.com
+    url: https://github.com/lamaldonado/cashbackboticario
+    
+tags:
+  - name: "Contas"
+    description: "Operações relacionadas ao gerenciamento de contas"
+  - name: "Compras"
+    description: "Operações relacionadas ao gerenciamento de compras"
+  
+servers:
+  - url: "http://localhost:9090/api"
+paths:
+  /v1/revendedor:
+    post:
+      tags:
+        - "Contas"
+      summary: "Adiciona um novo revendedor"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RevendedorRequest"
+      responses:
+        201:
+          description: "201 - Revendedor created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RevendedorResponse"
+        500:
+          description: "500 - Erro na solicitação"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              example:
+                success: false
+                error: "CPF inválido"
+                message: "Invalid Request"
+  /v1/login:
+    post:
+      tags:
+      - "Contas"
+      summary: "Realiza login e retorna um token JWT"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+                $ref: "#/components/schemas/RevendedorLoginRequest"
+      responses:
+        200:
+          description: "200 - Token JWT e Token de renovação gerados com sucesso"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RevendedorLoginResponse"
+        401:
+          description: "401 - CPF ou senha inválidos"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              example:
+                success: false
+                error: "CPF ou senha inválida"
+        500:
+          description: "500 - Erro ao validar Usuário"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              example:
+                success: false
+                message: "Invalid Request"
+                error: "CPF é obrigatório"
+  /v1/compras:
+    post:
+      tags:
+      - "Compras"
+      summary: "Realiza o cadastro de uma nova compra"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+                $ref: "#/components/schemas/ComprasRequest"
+      responses:
+        201:
+          description: "201 - Compra created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ComprasResponse"
+        401:
+          description: "401 - Erro ao validar o JWT"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              example:
+                success: false
+                message: "Token de autorização não fornecido"
+        404:
+          description: "404 - Revendedor não encontrado"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+              example:
+                success: false
+                message: "Invalid Request"
+                error: "Revendedor não encontrado"
+        500:
+          description: "500 - Erro ao registrar a compra"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              example:
+                success: false
+                message: "Invalid Request"
+                error: "CPF é obrigatório"
+      security:
+      - authorizer: []
+    get:
+      tags:
+      - "Compras"
+      summary: "Recupera as compras de um revendedor"
+      parameters:
+        - in: query
+          name: cpf
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: "201 - Compra retrieved"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ComprasGetResponse"
+        401:
+          description: "401 - Erro ao validar o JWT"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              example:
+                success: false
+                message: "Token de autorização não fornecido"
+        404:
+          description: "404 - Revendedor não encontrado"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+              example:
+                success: false
+                message: "Invalid Request"
+                error: "Revendedor não encontrado"
+        422:
+          description: "422 - CPF inválido"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+              example:
+                success: false
+                message: "CPF inválido"
+        500:
+          description: "500 - Erro ao recuperar a compra"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              example:
+                success: false
+                message: "Invalid Request"
+      security:
+      - authorizer: []
+  /v1/cashback:
+    get:
+      tags:
+      - "Compras"
+      summary: "Recupera o valor acumulado de cashback"
+      parameters:
+        - in: query
+          name: cpf
+          schema:
+            type: string
+          required: true
+      responses:
+        200:
+          description: "201 - Cashback retrieved"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CashbackResponse"
+        401:
+          description: "401 - Erro ao validar o JWT"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              example:
+                success: false
+                message: "Token de autorização não fornecido"
+        404:
+          description: "404 - Revendedor não encontrado"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+              example:
+                success: false
+                message: "Invalid Request"
+                error: "Revendedor não encontrado"
+        422:
+          description: "422 - CPF inválido"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/APIError"
+              example:
+                success: false
+                message: "CPF inválido"
+        500:
+          description: "500 - Erro ao recuperar o cashback"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              example:
+                success: false
+                message: "Invalid Request"
+      security:
+      - authorizer: []
+components:
+  securitySchemes:
+    authorizer:
+      type: "apiKey"
+      name: "Authorization"
+      in: "header"
+  schemas:
+    RevendedorRequest:
+      type: "object"
+      properties:
+        cpf:
+          type: "string"
+          example: "11111111111"
+          description: "CPF do revendedor"
+          pattern: "(^\\d{11}$)"
+        nome:
+          type: "string"
+          example: "Revendedor 1"
+          description: "Nome do revendedor"
+        email:
+          type: "string"
+          example: "mail@mail.com"
+          description: "Email do revendedor"
+          format: "email"
+        senha:
+          type: "string"
+          example: "123456"
+          description: "Senha do revendedor"
+    RevendedorResponse:
+      type: "object"
+      required:
+        - "success"
+        - "message"
+        - "nome"
+        - "cpf"
+        - "email"
+      properties:
+        success:
+          type: "boolean"
+          example: true
+        name:
+          type: "string"
+          example: "Revendedor 1"
+        cpf:
+          type: "string"
+          example: "11111111111"
+        email:
+          type: "string"
+          example: "mail@mail.com"
+    RevendedorLoginRequest:
+      type: "object"
+      required:
+      - "email"
+      - "password"
+      properties:
+        email:
+          type: "string"
+          example: "mail@mail.com"
+          description: "E-mail do Revendedor"
+          format: "email"
+        password:
+          type: "string"
+          example: "123456"
+          description: "Senha do revendedor"
+    RevendedorLoginResponse:
+      type: "object"
+      required:
+      - "success"
+      - "token"
+      properties:
+        success:
+          type: boolean
+          example: true
+        token:
+          type: "string"
+          example: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImNwZiI6IjExMTExMTExMTExIiwiZW1haWwiOiJtYWlsQG1haWwuY29tIiwibm9tZSI6IlJldmVuZGVkb3IgMSJ9LCJpYXQiOjE1ODM0OTk5MTQsImV4cCI6MTU4MzU4NjMxNH0.knP0dyL7jADMdXIrCJipa5PXHFJZyLiJHxbLCFFHuaU"
+          description: "Token JWT do revendedor"
+    ComprasRequest:
+      type: "object"
+      required:
+      - "cpf"
+      - "codigo"
+      - "valor"
+      - "data"
+      properties:
+        cpf:
+          type: "string"
+          example: "11111111111"
+          description: "CPF do revendedor"
+          pattern: "(^\\d{11}$)"
+        codigo:
+          type: "string"
+          example: "123456"
+          description: "Código do produto"
+        valor:
+          type: "string"
+          example: "12,34"
+          description: "Valor do produto"
+        data:
+          type: "string"
+          example: "01/01/2020"
+          description: "Data da compra do produto"
+    ComprasResponse:
+      type: "object"
+      required:
+      - "success"
+      - "message"
+      - "codigo"
+      - "cpf"
+      - "valor"
+      - "data"
+      - "status"
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: "string"
+          example: "Compra created"
+        codigo:
+          type: "string"
+          example: "123456"
+          description: "Código do produto"
+        cpf:
+          type: "string"
+          example: "11111111111"
+          description: "CPF do revendedor"
+          pattern: "(^\\d{11}$)"
+        valor:
+          type: "string"
+          example: "12,34"
+          description: "Valor do produto"
+        data:
+          type: "string"
+          example: "01/01/2020"
+          description: "Data da compra do produto"
+        status:
+          type: "string"
+          example: "Em validação"
+          description: "Status da compra"
+    ComprasGetResponse:
+      type: "object"
+      required:
+      - "success"
+      - "message"
+      - "compras"
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: "string"
+          example: "Compra created"
+        compras:
+          type: "array"
+          items:
+            type: "object"
+            required:
+            - "codigo"
+            - "valor"
+            - "data"
+            - "status"
+            - "cashback"
+            properties:
+              codigo:
+                type: "string"
+                example: "123456"
+                description: "Código do produto"
+              valor:
+                type: "string"
+                example: "12,34"
+                description: "Valor do produto"
+              data:
+                type: "string"
+                example: "01/01/2020"
+                description: "Data da compra do produto"
+              status:
+                type: "string"
+                example: "Em validação"
+                description: "Status da compra"
+              cashback:
+                type: "array"
+                items:
+                  type: "object"
+                  required:
+                  - "percentual"
+                  - "valor"
+                  properties:
+                    percentual:
+                      type: "string"
+                      example: "10"
+                      description: "Percentual aplicado ao produto"
+                    valor:
+                      type: "string"
+                      example: "1,23"
+                      description: "Valor do cashback"
+    CashbackResponse:
+      type: "object"
+      required:
+      - "success"
+      - "message"
+      properties:
+        success:
+          type: boolean
+          example: true
+        credit:
+          type: "string"
+          example: "1234"
+    Error:
+      type: "object"
+      properties:
+        status:
+          type: boolean
+          example: false
+        message:
+          type: "string"
+          example: "CPF inválido"
+          description: "Ocorreu um problema no envio da solicitação"
+    APIError:
+      type: "object"
+      properties:
+        success: 
+          type: "boolean"
+          example: 'false'
+        errror:
+          type: "string"
+          example: "Um problema ocorreu"
+          description: "Descrição do erro encontrado"
+        message:
+          type: "string"
+          example: "Erro ao gravar no banco"
+          description: "Uma mensagem do erro encontrado"
